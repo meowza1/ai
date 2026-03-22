@@ -148,7 +148,10 @@ class MinMaxLHRM(nn.Module):
 
     def _relevance_score(self, prompt_ids: torch.Tensor, full_ids: torch.Tensor) -> float:
         prompt_h = self.token_emb(prompt_ids).mean(dim=(0, 1))
-        out_h = self.token_emb(full_ids[:, prompt_ids.shape[1] :]).mean(dim=(0, 1))
+        continuation = full_ids[:, prompt_ids.shape[1] :]
+        if continuation.numel() == 0:
+            return -1.0
+        out_h = self.token_emb(continuation).mean(dim=(0, 1))
         return torch.cosine_similarity(prompt_h, out_h, dim=0).item()
 
 

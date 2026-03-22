@@ -42,7 +42,8 @@ def interactive(args: argparse.Namespace) -> None:
             continue
 
         prompt = f"User: {user}\nAssistant:"
-        ids = torch.tensor([tok.encode(prompt, add_bos=True, add_eos=False)], device=device)
+        prompt_ids = tok.encode(prompt, add_bos=True, add_eos=False)
+        ids = torch.tensor([prompt_ids], device=device)
         out = model.refine_answer(
             ids,
             rounds=args.refine_rounds,
@@ -51,9 +52,17 @@ def interactive(args: argparse.Namespace) -> None:
             temperature=args.temperature,
             eos_id=tok.stoi[tok.eos_token],
         )
-        response = tok.decode(out[0].tolist())
-        if "Assistant:" in response:
-            response = response.split("Assistant:", 1)[-1].strip()
+        # Decode only the newly generated tail to avoid "self-chat" prompt replay.
+        new_token_ids = out[0].tolist()[len(prompt_ids) :]
+        response = tok.decode(new_token_ids).strip()
+        # If model starts another turn, cut output at the next explicit speaker marker.
+        for stop in ("\nuser:", "\nassistant:"):
+            stop_i = response.lower().find(stop)
+            if stop_i != -1:
+                response = response[:stop_i].strip()
+                break
+        if not response:
+            response = "I need a bit more context. Can you rephrase your request?"
         print("Bot>", response)
         turns += 1
 

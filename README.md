@@ -14,7 +14,7 @@
 ## Quick start
 
 ```bash
-python -m minmax_lhrm.train --data data/english_seed.md --steps 450 --out-dir artifacts/minmax-v1
+python -m minmax_lhrm.train --data data/english_seed_plus.md --steps 450 --out-dir artifacts/minmax-v1
 python -m minmax_lhrm.chat --model-dir artifacts/minmax-v1 --temperature 0.7 --session-minutes 1.5
 ```
 
@@ -33,13 +33,13 @@ Default model config is above **500k parameters**.
 ### 1) Base train
 
 ```bash
-python -m minmax_lhrm.train --data data/english_seed.md --steps 450
+python -m minmax_lhrm.train --data data/english_seed_plus.md --steps 450
 ```
 
 ### 2) Fine-tune on additional text/code
 
 ```bash
-python -m minmax_lhrm.finetune --model-dir artifacts/minmax-v1 --data your_texts/ --steps 200 --out-dir artifacts/minmax-v1-ft
+python -m minmax_lhrm.finetune --model-dir artifacts/minmax-v1 --data data/english_seed_plus.md --steps 200 --out-dir artifacts/minmax-v1-ft
 ```
 
 ### 3) SFT on instruction JSONL
@@ -63,4 +63,3 @@ You shared many Hugging Face datasets. Recommended workflow:
 - Browser tools are intentionally deferred.
 - Autonomous self-training beyond local data is not enabled by default.
 - The current skill system is local and safe for Replit.
-

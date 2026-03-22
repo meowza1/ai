@@ -10,7 +10,7 @@ def main() -> None:
         "-m",
         "minmax_lhrm.train",
         "--data",
-        "data/english_seed.md",
+        "data/english_seed_plus.md",
         "--steps",
         "450",
         "--out-dir",

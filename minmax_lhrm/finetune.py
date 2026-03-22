@@ -25,6 +25,11 @@ def run(args: argparse.Namespace) -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, tok = load_model(args.model_dir, device)
     texts = load_texts(args.data)
+    if not texts:
+        raise SystemExit(
+            "No finetune data found. Provide existing file(s)/folder(s), e.g. "
+            "`python -m minmax_lhrm.finetune --model-dir artifacts/minmax-v1 --data data/english_seed.md`"
+        )
     ids = build_train_ids(tok, texts)
     ds = NextTokenDataset(ids, model.cfg.block_size)
     dl = DataLoader(ds, batch_size=args.batch_size, shuffle=True, drop_last=True)

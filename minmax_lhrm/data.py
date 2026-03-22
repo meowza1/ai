@@ -28,6 +28,8 @@ def load_texts(paths: list[str]) -> list[str]:
     texts = []
     for p in paths:
         path = Path(p)
+        if not path.exists():
+            continue
         if path.is_dir():
             for sub in sorted(path.glob("**/*")):
                 if sub.is_file() and sub.suffix.lower() in {".txt", ".md", ".py", ".json"}:

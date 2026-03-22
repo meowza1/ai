@@ -67,7 +67,7 @@ def run_train(args: argparse.Namespace) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Train MinMax LHRM")
-    p.add_argument("--data", nargs="+", default=["data/english_seed.md"], help="Training files or directories")
+    p.add_argument("--data", nargs="+", default=["data/english_seed_plus.md"], help="Training files or directories")
     p.add_argument("--out-dir", default="artifacts/minmax-v1")
     p.add_argument("--steps", type=int, default=450)
     p.add_argument("--batch-size", type=int, default=16)
